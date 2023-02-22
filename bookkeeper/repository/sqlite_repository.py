@@ -57,6 +57,6 @@ class SQliteRepository(AbstractRepository[T], ABC):
 
         with sql.connect(self.db_file) as con:
             cur = con.cursor()
-            cur.execute(f"UPDATE {self.table_name} SET ({obj.pk}) == ({obj})")
+            cur.execute(f"UPDATE {self.table_name} SET ({obj.pk}) = ({obj})")
         con.close()
 
