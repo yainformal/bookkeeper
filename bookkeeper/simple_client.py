@@ -4,14 +4,20 @@
 
 from bookkeeper.models.category import Category
 from bookkeeper.models.expense import Expense
-from bookkeeper.repository.memory_repository import MemoryRepository
+from bookkeeper.repository.sqlite_repository import SQliteRepository
+#from bookkeeper.repository.memory_repository import MemoryRepository
 from bookkeeper.utils import read_tree
 
-cat_repo = MemoryRepository[Category]()
-exp_repo = MemoryRepository[Expense]()
 
-cats = '''
-продукты
+#cat_repo = MemoryRepository[Category]()
+#exp_repo = MemoryRepository[Expense]()
+
+cat_repo = SQliteRepository[Category]('data_test.db', Category)
+exp_repo = SQliteRepository[Expense]('data_test.db', Expense)
+
+
+cats= '''
+продукты                           
     мясо
         сырое мясо
         мясные продукты
@@ -20,11 +26,12 @@ cats = '''
 одежда
 '''.splitlines()
 
-Category.create_from_tree(read_tree(cats), cat_repo)
+#Category.create_from_tree(read_tree(cats), cat_repo)
+
 
 while True:
     try:
-        cmd = input('$> ')
+        cmd = input('Введите команду $> ')
     except EOFError:
         break
     if not cmd:
