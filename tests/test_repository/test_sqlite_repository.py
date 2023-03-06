@@ -13,7 +13,7 @@ def custom_class():
 
 @pytest.fixture
 def repo():
-    return SQliteRepository('auto_test.db',repo)
+    return SQliteRepository('auto_test.db',custom_class)
 
 
 

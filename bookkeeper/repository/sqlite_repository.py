@@ -89,7 +89,7 @@ class SQliteRepository(AbstractRepository[T], ABC):
 
         with sql.connect(self.db_file) as con:
             cur = con.cursor()
-            update_obj = ', '.join(f'{key} = {val}'.format(key, val)
+            update_obj = ', '.join('{key} = {val}'.format(key, val)
                                    for key, val in obj.__dict__.items()
                                    )
             cur.execute(f"UPDATE {self.table_name} SET {update_obj} WHERE pk = {obj.pk}")
