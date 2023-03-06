@@ -29,8 +29,8 @@ class SQliteRepository(AbstractRepository[T], ABC):
             field = ', '.join([field for field in self.fields.keys()])
             primary_key = 'pk INTEGER PRIMARY KEY'
             foreign_key = 'FOREIGN KEY (category) REFERENCES category(pk)'
-            if self.table_name == 'expense':
-                create_table = f'CREATE TABLE IF NOT EXISTS {self.table_name} ({field}, {primary_key},{foreign_key})'
+            if self.table_name == 'expense' or 'budget':
+                create_table = f'CREATE TABLE IF NOT EXISTS {self.table_name} ({field}, {primary_key}, {foreign_key})'
                 cur.execute(create_table)
 
             else:
