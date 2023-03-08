@@ -3,11 +3,15 @@
 """
 import sqlite3 as sql
 from inspect import get_annotations
-from typing import Any
+from typing import Any, List
 from abc import ABC
 from bookkeeper.repository.abstract_repository import AbstractRepository, T
 
 
+
+
+
+# noinspection PyMethodParameters,PyUnreachableCode
 class SQliteRepository(AbstractRepository[T], ABC):
     """
    Репозиторий хранящий данные приложения с использованием СУБД SQLite.
@@ -55,7 +59,7 @@ class SQliteRepository(AbstractRepository[T], ABC):
         row = [self.class_name(*obj) for obj in res][0]
         return row
 
-    def get_all(self, where: dict[str, Any] | None = None) -> list[list[Any]] | list[Any]:
+    def get_all(self, where: dict[str, Any] | None = None) -> List[T]:
         if where is None:
             with sql.connect(self.db_file) as con:
                 cur = con.cursor()
@@ -67,7 +71,7 @@ class SQliteRepository(AbstractRepository[T], ABC):
         with sql.connect(self.db_file) as con:
             cur = con.cursor()
             where_attr = ', '.join('{} = "{}"'.format(key, val) for key, val in where.items())
-            # TODO: подумать как достать строку и избавиться от ""
+            #TODO: подумать как достать строку и избавиться от ""
             cur.execute(f'SELECT * FROM {self.table_name} WHERE {where_attr}')
             res = cur.fetchall()
         con.close()
@@ -85,7 +89,7 @@ class SQliteRepository(AbstractRepository[T], ABC):
 
         with sql.connect(self.db_file) as con:
             cur = con.cursor()
-            update_obj = ', '.join('{} = {}'.format(key, val)
+            update_obj = ', '.join(f'{key} = {val}'.format(key, val)
                                    for key, val in obj.__dict__.items()
                                    )
             cur.execute(f"UPDATE {self.table_name} SET {update_obj} WHERE pk = {obj.pk}")
