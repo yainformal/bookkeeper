@@ -59,14 +59,14 @@ class SQliteRepository(AbstractRepository[T], ABC):
         row = [self.class_name(*obj) for obj in res][0]
         return row
 
-    def get_all(self, where: dict[str, Any] | None = None) -> List[T]:
+    def get_all(self, where: dict[str, Any] | None = None) -> list[list[Any]] | list[Any]:
         if where is None:
             with sql.connect(self.db_file) as con:
                 cur = con.cursor()
                 cur.execute(f'SELECT * FROM {self.table_name}')
                 res = cur.fetchall()
             con.close()
-            return [[self.class_name(*obj) for obj in res]]
+            return [self.class_name(*obj) for obj in res]
 
         with sql.connect(self.db_file) as con:
             cur = con.cursor()
