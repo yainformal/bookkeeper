@@ -1,5 +1,5 @@
 from PySide6.QtCore import Signal, QDateTime
-from PySide6.QtGui import QStandardItemModel
+from PySide6.QtGui import QStandardItemModel, QDoubleValidator, QIntValidator
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QTableWidget, QLineEdit, QLabel, QWidget, QHBoxLayout, \
     QComboBox, QDateTimeEdit
 
@@ -23,6 +23,10 @@ class AddExpenseWidget(QWidget):
         self.add_expense = None  # TODO: переработать метод
         self.amount_lable = QLabel("Сумма:")
         self.amount_edit = QLineEdit()
+
+        # Создаем валидатор для ввода положительных дробных чисел
+        amount_validator = QIntValidator(0, 100000000)
+        self.amount_edit.setValidator(amount_validator)
 
         self.category_lable = QLabel("Категория:")
         self.category_edit = QComboBox()
