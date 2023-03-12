@@ -1,0 +1,27 @@
+import sys
+from PySide6.QtGui import QStandardItemModel
+from bookkeeper.models.expense import Expense
+
+from PySide6 import QtWidgets, QtCore, QtGui
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QWidget, QVBoxLayout, QHBoxLayout, QLabel, \
+    QLineEdit, QDateEdit, QPushButton, QTabWidget
+
+from bookkeeper.view.bookkeepr_widgets import MainWidget
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("My Bookkeeper")
+
+        # Initialize the expense management widget
+        self.main_widget = MainWidget()
+        self.setCentralWidget(self.main_widget)
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    main_window = MainWindow()
+    main_window.show()
+    sys.exit(app.exec())
