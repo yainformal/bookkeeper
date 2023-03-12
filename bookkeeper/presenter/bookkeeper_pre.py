@@ -10,8 +10,9 @@ from bookkeeper.repository.sqlite_repository import SQliteRepository
 
 
 class Bookkeeper:
-    def __init__(self, view: AbstractView, exp_repo, category_repo):
+    def __init__(self, view: AbstractView, resent_expense_view: AbstractView, exp_repo, category_repo):
         self.view = view
+        self.resent_expense_view = resent_expense_view
         # self.category_repo = category_repo.get(Category)
         self.exp_repo = exp_repo
         self.category_repo = category_repo
@@ -21,6 +22,16 @@ class Bookkeeper:
         # Вычитываем передаваемые сигналы с кнопки add_button виджета add_expense
         self.view.add_button.clicked.connect(self.add_expenses)
         self.view.add_button.clicked.connect(self.clear_add_expense_fields)
+
+        #подписываемся на изменения в блоке расходы
+        self.exp_repo.repo_changed.connect(self.listen_update_exp)
+        # Получаем текущий список расходов и отображаем его в представлении
+        expenses = self.exp_repo.get_all()
+        self.resent_expense_view.set_expenses(expenses)
+
+    def listen_update_exp(self, expenses): #TODO: добить вопрос, повесить сигнал на репозиторий 
+        pass
+
 
     def modify_cat(self, cat: Category) -> None:
         pass

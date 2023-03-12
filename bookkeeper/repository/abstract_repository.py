@@ -9,6 +9,7 @@
 
 from abc import ABC, abstractmethod
 from typing import Generic, TypeVar, Protocol, Any
+from PySide6.QtCore import QObject, Signal
 
 
 class Model(Protocol):  # pylint: disable=too-few-public-methods
@@ -21,7 +22,8 @@ class Model(Protocol):  # pylint: disable=too-few-public-methods
 T = TypeVar('T', bound=Model)
 
 
-class AbstractRepository(ABC, Generic[T]):
+class AbstractRepository(Generic[T],):
+    repo_changed = Signal(list)
     """
     Абстрактный репозиторий.
     Абстрактные методы:
@@ -38,6 +40,7 @@ class AbstractRepository(ABC, Generic[T]):
         Добавить объект в репозиторий, вернуть id объекта,
         также записать id в атрибут pk.
         """
+        self.repo_changed.emit(self.get_all())
 
     @abstractmethod
     def get(self, pk: int) -> T | None:
@@ -54,7 +57,9 @@ class AbstractRepository(ABC, Generic[T]):
     @abstractmethod
     def update(self, obj: T) -> None:
         """ Обновить данные об объекте. Объект должен содержать поле pk. """
+        self.repo_changed.emit(self.get_all())
 
     @abstractmethod
     def delete(self, pk: int) -> None:
         """ Удалить запись """
+        self.repo_changed.emit(self.get_all())

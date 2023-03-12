@@ -6,18 +6,20 @@ from inspect import get_annotations
 from typing import Any, List
 from abc import ABC
 from bookkeeper.repository.abstract_repository import AbstractRepository, T
+from PySide6.QtCore import QObject, Signal
 
 
 
 
 
 # noinspection PyMethodParameters,PyUnreachableCode
-class SQliteRepository(AbstractRepository[T], ABC):
+class SQliteRepository(AbstractRepository[T], QObject):
     """
    Репозиторий хранящий данные приложения с использованием СУБД SQLite.
     """
 
     def __init__(self, db_file: str, cls: type) -> None:
+        super().__init__()
         self.db_file = db_file
         self.table_name = cls.__name__.lower()
         self.class_name = cls
@@ -48,6 +50,7 @@ class SQliteRepository(AbstractRepository[T], ABC):
             cur.execute(f'INSERT INTO {self.table_name} ({names}) VALUES ({promote})', values)
             obj.pk = cur.lastrowid
         con.close()
+        self.repo_changed.emit(self.get_all())
         return obj.pk
 
     def get(self, pk: int) -> T | None:
@@ -82,6 +85,7 @@ class SQliteRepository(AbstractRepository[T], ABC):
             cur = con.cursor()
             cur.execute(f"DELETE FROM {self.table_name} WHERE pk = {pk}")
         con.close()
+        self.repo_changed.emit(self.get_all())
 
     def update(self, obj: T) -> None:
         if obj.pk == 0:
@@ -94,3 +98,4 @@ class SQliteRepository(AbstractRepository[T], ABC):
                                    )
             cur.execute(f"UPDATE {self.table_name} SET {update_obj} WHERE pk = {obj.pk}")
         con.close()
+        self.repo_changed.emit(self.get_all())
