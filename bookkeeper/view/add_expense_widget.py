@@ -3,10 +3,14 @@ from PySide6.QtGui import QStandardItemModel
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QTableWidget, QLineEdit, QLabel, QWidget, QHBoxLayout, \
     QComboBox, QDateTimeEdit
 
-from bookkeeper.view.bookkeepr_widgets import cat_repo
+from bookkeeper import SQliteRepository
+from bookkeeper.models.category import Category
+from bookkeeper.models.expense import Expense
 from bookkeeper.view.category_edit_widget import CategoryEditWidget
 from bookkeeper.view.toggle_window import toggle_window
 
+path = '/Users/mikhailgubanov/Yandex.Disk.localized/bookkeeper/bookkeeper/data_test.db'
+cat_repo = SQliteRepository[Category](path, Category)
 
 class AddExpenseWidget(QWidget):
     add_expense = Signal(str, str, int)  # TODO: дописать сигнал на добавление расходов
@@ -23,7 +27,7 @@ class AddExpenseWidget(QWidget):
         self.category_lable = QLabel("Категория:")
         self.category_edit = QComboBox()
 
-        # Добавляем категории в выпадающий список.
+        # Добавляем категории в выпадающий список.   #TODO: Изменить ссылки на репозиторий
         categories = cat_repo.get_all()
         for category in categories:
             self.category_edit.addItem(category.name)
@@ -32,7 +36,7 @@ class AddExpenseWidget(QWidget):
         self.datetime_edit = QDateTimeEdit()
         self.datetime_edit.setDateTime(QDateTime.currentDateTime())
 
-        self.comment_lable = QLabel("Комментарий")
+        self.comment_lable = QLabel("Комментарий:")
         self.comment_edit = QLineEdit()
 
         self.edit_button = QPushButton('Категории')
@@ -40,7 +44,7 @@ class AddExpenseWidget(QWidget):
             lambda checked: toggle_window(self.category_edit_window))
 
         self.add_button = QPushButton("Добавить")
-        self.add_button.clicked.connect(self.add_expense)  # TODO: доработать метод добавления данных в репозиторий
+                              # TODO: доработать метод добавления данных в репозиторий
 
         category_layout = QHBoxLayout()
         category_layout.addWidget(self.category_edit)
@@ -55,7 +59,10 @@ class AddExpenseWidget(QWidget):
         layout.addLayout(amount_layout)
         layout.addWidget(self.datetime_lable)
         layout.addWidget(self.datetime_edit)
+        layout.addWidget(self.comment_lable)
+        layout.addWidget(self.comment_edit)
         layout.addWidget(self.add_button)
 
         self.setLayout(layout)
+
 
