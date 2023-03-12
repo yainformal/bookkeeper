@@ -1,5 +1,6 @@
 from datetime import datetime
 
+from PySide6.QtCore import Slot
 from setuptools.config._validate_pyproject import ValidationError
 
 from bookkeeper.view.abstract_view import AbstractView
@@ -11,6 +12,7 @@ from bookkeeper.repository.sqlite_repository import SQliteRepository
 
 class Bookkeeper:
     def __init__(self, view: AbstractView, resent_expense_view: AbstractView, exp_repo, category_repo):
+        self.my_slot = None
         self.view = view
         self.resent_expense_view = resent_expense_view
         # self.category_repo = category_repo.get(Category)
@@ -24,13 +26,18 @@ class Bookkeeper:
         self.view.add_button.clicked.connect(self.clear_add_expense_fields)
 
         #подписываемся на изменения в блоке расходы
-        self.exp_repo.repo_changed.connect(self.listen_update_exp)
+        self.exp_repo.repo_changed.connect(self.my_slot)
         # Получаем текущий список расходов и отображаем его в представлении
         expenses = self.exp_repo.get_all()
-        self.resent_expense_view.set_expenses(expenses)
+        self.resent_expense_view.display_expenses(expenses,category_repo)
+        
+
+
+        
+
 
     def listen_update_exp(self, expenses): #TODO: добить вопрос, повесить сигнал на репозиторий 
-        pass
+        self.resent_expense_view.set_expenses(expenses)
 
 
     def modify_cat(self, cat: Category) -> None:

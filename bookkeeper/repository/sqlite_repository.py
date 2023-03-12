@@ -14,6 +14,7 @@ from PySide6.QtCore import QObject, Signal
 
 # noinspection PyMethodParameters,PyUnreachableCode
 class SQliteRepository(AbstractRepository[T], QObject):
+    repo_changed = Signal(list)
     """
    Репозиторий хранящий данные приложения с использованием СУБД SQLite.
     """
