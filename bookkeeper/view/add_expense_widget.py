@@ -12,15 +12,13 @@ from bookkeeper.view.toggle_window import toggle_window
 path = '/Users/mikhailgubanov/Yandex.Disk.localized/bookkeeper/bookkeeper/data_test.db'
 cat_repo = SQliteRepository[Category](path, Category)
 
+
 class AddExpenseWidget(QWidget):
     add_expense = Signal(str, str, int)  # TODO: дописать сигнал на добавление расходов
 
     def __init__(self):
         super().__init__()
 
-        self.category_edit_window = CategoryEditWidget()
-
-        self.add_expense = None  # TODO: переработать метод
         self.amount_lable = QLabel("Сумма:")
         self.amount_edit = QLineEdit()
 
@@ -44,11 +42,8 @@ class AddExpenseWidget(QWidget):
         self.comment_edit = QLineEdit()
 
         self.edit_button = QPushButton('Категории')
-        self.edit_button.clicked.connect(
-            lambda checked: toggle_window(self.category_edit_window))
 
         self.add_button = QPushButton("Добавить")
-                              # TODO: доработать метод добавления данных в репозиторий
 
         category_layout = QHBoxLayout()
         category_layout.addWidget(self.category_edit)
@@ -68,5 +63,3 @@ class AddExpenseWidget(QWidget):
         layout.addWidget(self.add_button)
 
         self.setLayout(layout)
-
-

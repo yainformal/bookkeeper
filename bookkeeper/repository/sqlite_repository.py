@@ -9,9 +9,6 @@ from bookkeeper.repository.abstract_repository import AbstractRepository, T
 from PySide6.QtCore import QObject, Signal
 
 
-
-
-
 # noinspection PyMethodParameters,PyUnreachableCode
 class SQliteRepository(AbstractRepository[T], QObject):
     repo_changed = Signal(list)
@@ -32,7 +29,8 @@ class SQliteRepository(AbstractRepository[T], QObject):
             field = ', '.join([field for field in self.fields.keys()])
             primary_key = 'pk INTEGER PRIMARY KEY'
             foreign_key = 'FOREIGN KEY (category) REFERENCES category(pk)'
-            if self.table_name == 'expense' or 'budget':
+
+            if self.table_name != 'category':
                 create_table = f'CREATE TABLE IF NOT EXISTS {self.table_name} ({field}, {primary_key}, {foreign_key})'
                 cur.execute(create_table)
 
@@ -75,7 +73,7 @@ class SQliteRepository(AbstractRepository[T], QObject):
         with sql.connect(self.db_file) as con:
             cur = con.cursor()
             where_attr = ', '.join('{} = "{}"'.format(key, val) for key, val in where.items())
-            #TODO: подумать как достать строку и избавиться от ""
+            # TODO: подумать как достать строку и избавиться от ""
             cur.execute(f'SELECT * FROM {self.table_name} WHERE {where_attr}')
             res = cur.fetchall()
         con.close()

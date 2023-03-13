@@ -1,4 +1,5 @@
 from datetime import datetime
+from typing import List
 
 from PySide6 import QtCore
 from PySide6.QtCore import Slot
@@ -9,15 +10,18 @@ from bookkeeper.models.category import Category
 from bookkeeper.models.expense import Expense
 from bookkeeper.models.budget import Budget
 from bookkeeper.repository.sqlite_repository import SQliteRepository
+from bookkeeper.view.toggle_window import toggle_window
 
 
 class Bookkeeper:
     repo_changed = QtCore.Signal(list)
-    def __init__(self, view: AbstractView, resent_expense_view: AbstractView, exp_repo, category_repo):
-        self.my_slot = None
+
+    def __init__(self, view: AbstractView, resent_expense_view: AbstractView, category_edit_view: AbstractView,
+                 exp_repo, category_repo):
         self.view = view
         self.resent_expense_view = resent_expense_view
-        # self.category_repo = category_repo.get(Category)
+        self.category_edit_view = category_edit_view
+
         self.exp_repo = exp_repo
         self.category_repo = category_repo
         # self.cats = self.category_repo.get_all()
@@ -27,22 +31,30 @@ class Bookkeeper:
         self.view.add_button.clicked.connect(self.add_expenses)
         self.view.add_button.clicked.connect(self.clear_add_expense_fields)
 
-        #подписываемся на изменения в блоке расходы
+        self.view.edit_button.clicked.connect(
+            lambda checked: toggle_window(self.category_edit_view))
+
+        # подписываемся на изменения в блоке расходы
         self.exp_repo.repo_changed.connect(self.listen_update_exp)
+
         # Получаем текущий список расходов и отображаем его в представлении
-        expenses = self.exp_repo.get_all()
-        self.resent_expense_view.display_expenses(expenses,self.category_repo)
-        
-
-
-        
-
-
-    def listen_update_exp(self):
-        #TODO: добить вопрос, повесить сигнал на репозиторий
         expenses = self.exp_repo.get_all()
         self.resent_expense_view.display_expenses(expenses, self.category_repo)
 
+        # Подписываемся чтение в репозитории категории. Репозиторий с категориями передаем для отображения данных.
+        self.category_repo.repo_changed.connect(self.listen_update_cat)
+        categories = self.category_repo.get_all()
+        self.category_edit_view.display_categories(categories, self.category_repo)
+
+    # онлайн обновление таблицы с категориями
+    def listen_update_cat(self) -> List[Category]:
+        categories = self.category_repo.get_all()
+        self.category_edit_view.display_categories(categories, self.category_repo)
+
+    # функция отвечает за онлайн обновление таблицы расходов
+    def listen_update_exp(self) -> List[Expense]:
+        expenses = self.exp_repo.get_all()
+        self.resent_expense_view.display_expenses(expenses, self.category_repo)
 
     def modify_cat(self, cat: Category) -> None:
         pass

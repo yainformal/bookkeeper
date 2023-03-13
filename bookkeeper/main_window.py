@@ -1,8 +1,4 @@
 import sys
-from PySide6.QtGui import QStandardItemModel
-from bookkeeper.models.expense import Expense
-
-from PySide6 import QtWidgets, QtCore, QtGui
 from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QWidget, QVBoxLayout, QHBoxLayout, QLabel, \
     QLineEdit, QDateEdit, QPushButton, QTabWidget
 

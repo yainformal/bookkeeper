@@ -1,6 +1,10 @@
 from PySide6.QtWidgets import QTableWidgetItem, QTableWidget, QVBoxLayout, QLabel, QWidget
 
 
+#TODO: переписать функцию заполнения данных.
+#TODO: перенести сведения с фронта в БД с возможностью записи данных
+
+
 class BudgetView(QWidget):
 
     def __init__(self):

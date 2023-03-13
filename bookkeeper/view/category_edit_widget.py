@@ -1,5 +1,11 @@
+from typing import List
+
 from PySide6.QtGui import QStandardItemModel
-from PySide6.QtWidgets import QPushButton, QVBoxLayout, QTableWidget, QLineEdit, QLabel, QWidget, QHBoxLayout
+from PySide6.QtWidgets import QPushButton, QVBoxLayout, QTableWidget, QLineEdit, QLabel, QWidget, QHBoxLayout, \
+    QTableWidgetItem
+
+from bookkeeper.models import expense
+from bookkeeper.models.category import Category
 
 
 def add_cat():
@@ -19,11 +25,8 @@ class CategoryEditWidget(QWidget):
         self.add_expense = None
         self.setWindowTitle("Редактирование категорий")
 
-        self.model = QStandardItemModel()
-
-        self.view = QTableWidget(3, 2)
-        self.view.setHorizontalHeaderLabels(['Категория', 'Родительская категория'])
-        # self.view.setModel(self.model) # TODO: получение и отображение данных о категории
+        self.category_edit_view = QTableWidget(2, 2)
+        self.category_edit_view.setHorizontalHeaderLabels(['Категория', 'Родительская категория'])
 
         self.cat_lable = QLabel("Категория:")
         self.cat_edit = QLineEdit()
@@ -47,13 +50,30 @@ class CategoryEditWidget(QWidget):
         layout_btn.addWidget(self.del_cat_button)
 
         layout = QVBoxLayout()
-        layout.addWidget(self.view)
-        self.view.resizeColumnsToContents()
-        self.view.setSizeAdjustPolicy(QTableWidget.AdjustToContents)
+        layout.addWidget(self.category_edit_view)
+        self.category_edit_view.resizeColumnsToContents()
+        self.category_edit_view.setSizeAdjustPolicy(QTableWidget.AdjustToContents)
         layout.addLayout(line_layout)
         layout.addLayout(layout_btn)
 
         self.setLayout(layout)
 
+    def display_categories(self, categories: List[Category], category_repo):
+        self.category_edit_view.setRowCount(len(categories))
+        self.category_edit_view.setColumnCount(2)
+
+        for i, category in enumerate(categories):
+            name_item = QTableWidgetItem(category.name)
+            self.category_edit_view.setItem(i, 0, name_item)
+
+            if category.parent is not None:
+                sub_item = QTableWidgetItem("{}".format(category_repo.get(category.parent).name))
+                self.category_edit_view.setItem(i, 1, sub_item)
+
+
+            self.category_edit_view.resizeColumnsToContents()
+            self.category_edit_view.setSizeAdjustPolicy(QTableWidget.AdjustToContents)
+            self.category_edit_view.setMaximumHeight(self.category_edit_view.rowHeight(1) * 6)
 
 # TODO: посмотреть на реализацию и переделать реализацию
+# TODO: прописать функциональность

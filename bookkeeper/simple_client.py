@@ -18,6 +18,8 @@ exp_repo = SQliteRepository[Expense]('data_test.db', Expense)
 bgt_repo = SQliteRepository[Budget]('data_test.db', Budget)
 
 
+
+
 cats= '''
 продукты                           
     мясо
