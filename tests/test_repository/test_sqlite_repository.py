@@ -5,18 +5,15 @@ import pytest
 
 @pytest.fixture
 def custom_class():
-    class Custom():
-        pk = 0
-
-    return Custom
-
-
+    class Category:
+        category: str = 'name'
+        pk: int = 0
+    return Category
 
 
 @pytest.fixture
 def repo():
-    return SQliteRepository('auto_test.db',custom_class)
-
+    return SQliteRepository('auto_test.db', custom_class)
 
 
 def test_crud(repo, custom_class):

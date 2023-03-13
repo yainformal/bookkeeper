@@ -1,6 +1,5 @@
 import sys
-from PySide6.QtWidgets import QApplication, QMainWindow, QTableView, QWidget, QVBoxLayout, QHBoxLayout, QLabel, \
-    QLineEdit, QDateEdit, QPushButton, QTabWidget
+from PySide6.QtWidgets import QApplication, QMainWindow
 
 from bookkeeper.view.bookkeepr_widgets import MainWidget
 

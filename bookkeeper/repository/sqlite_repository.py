@@ -2,10 +2,8 @@
 Модуль описывает репозиторий использующий в качестве СУБД SQLite
 """
 import sqlite3 as sql
-import re
 from inspect import get_annotations
-from typing import Any, List
-from abc import ABC
+from typing import Any
 from bookkeeper.repository.abstract_repository import AbstractRepository, T
 from PySide6.QtCore import QObject, Signal
 
@@ -34,11 +32,11 @@ class SQliteRepository(AbstractRepository[T], QObject):
             if self.table_name != 'category':
                 create_table = f'CREATE TABLE IF NOT EXISTS {self.table_name} ({field}, {primary_key}, {foreign_key})'
                 cur.execute(create_table)
-
             else:
                 create_table = f'CREATE TABLE IF NOT EXISTS {self.table_name} ({field}, {primary_key})'
                 cur.execute(create_table)
         con.close()
+
 
     def add(self, obj: T) -> int:
         names = ', '.join(self.fields.keys())

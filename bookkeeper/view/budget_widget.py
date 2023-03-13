@@ -1,3 +1,7 @@
+"""
+Виджет таблица бюджета -- реализует логику установки и отображения данных о лимитах
+"""
+
 from PySide6.QtWidgets import QTableWidgetItem, QTableWidget, QVBoxLayout, QLabel, QWidget
 
 
@@ -7,17 +11,20 @@ from PySide6.QtWidgets import QTableWidgetItem, QTableWidget, QVBoxLayout, QLabe
 
 class BudgetView(QWidget):
 
+    """
+    Реализует основной экран -- таблицу. Для отображения данных о бюджете
+    """
+
     def __init__(self):
         super().__init__()
 
         self.setWindowTitle("Бюджет")
         self.budget_lable = QLabel('Бюджет')
 
-        # Create the table widget with 4 columns and 3 rows
         self.table = QTableWidget(3, 4)
         self.table.setHorizontalHeaderLabels(['Период', 'Лимит', 'Расходы', 'Остаток'])
 
-        # Populate the table with data
+
         self.table.setItem(0, 0, QTableWidgetItem('День'))
         self.table.setItem(0, 1, QTableWidgetItem('1000'))
         self.table.setItem(0, 2, QTableWidgetItem('500'))
@@ -45,6 +52,13 @@ class BudgetView(QWidget):
 
 
     def update_data(self, item):
+        """
+        Обновление данных об оставшемся лимите
+        @param item:
+        @type item:
+        @return:
+        @rtype:
+        """
 
         if item.column() in (1, 2):
             income_item = self.table.item(item.row(), 1)

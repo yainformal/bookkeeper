@@ -1,18 +1,23 @@
-from PySide6.QtCore import Signal, QDate
-from PySide6.QtGui import QIntValidator
-from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLineEdit, QLabel, QWidget, QHBoxLayout, \
-    QComboBox, QDateEdit
+"""
+Основной виджет -- экран добавление расходов
 
+"""
+
+from PySide6.QtCore import QDate
+from PySide6.QtGui import QIntValidator
+from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLineEdit, \
+    QLabel, QWidget, QHBoxLayout, QComboBox, QDateEdit
 from bookkeeper.repository.sqlite_repository import SQliteRepository
 from bookkeeper.models.category import Category
-
 
 path = '/Users/mikhailgubanov/Yandex.Disk.localized/bookkeeper/bookkeeper/data_test.db'
 cat_repo = SQliteRepository[Category](path, Category)
 
 
 class AddExpenseWidget(QWidget):
-    add_expense = Signal(str, str, int)  # TODO: дописать сигнал на добавление расходов
+    """
+    Класс реализует виджет добавления расходов -- выступает как основной виджет
+    """
 
     def __init__(self):
         super().__init__()
@@ -20,14 +25,14 @@ class AddExpenseWidget(QWidget):
         self.amount_lable = QLabel("Сумма:")
         self.amount_edit = QLineEdit()
 
-        # Создаем валида тор для ввода положительных дробных чисел
+        # Создаем валидатор тор для ввода положительных дробных чисел
         amount_validator = QIntValidator(0, 100000000)
         self.amount_edit.setValidator(amount_validator)
 
         self.category_lable = QLabel("Категория:")
         self.category_edit = QComboBox()
 
-        # Добавляем категории в выпадающий список.   #TODO: Изменить ссылки на репозиторий
+        # Добавляем категории в выпадающий список.
         categories = cat_repo.get_all()
         for category in categories:
             self.category_edit.addItem(category.name)
