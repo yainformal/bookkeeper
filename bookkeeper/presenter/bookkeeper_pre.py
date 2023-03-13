@@ -31,6 +31,7 @@ class Bookkeeper:
         self.view.add_button.clicked.connect(self.add_expenses)
         self.view.add_button.clicked.connect(self.clear_add_expense_fields)
 
+        # реагируем на сигнал с кнопки категории
         self.view.edit_button.clicked.connect(
             lambda checked: toggle_window(self.category_edit_view))
 
@@ -40,6 +41,7 @@ class Bookkeeper:
         # Получаем текущий список расходов и отображаем его в представлении
         expenses = self.exp_repo.get_all()
         self.resent_expense_view.display_expenses(expenses, self.category_repo)
+        print(expenses)
 
         # Подписываемся чтение в репозитории категории. Репозиторий с категориями передаем для отображения данных.
         self.category_repo.repo_changed.connect(self.listen_update_cat)

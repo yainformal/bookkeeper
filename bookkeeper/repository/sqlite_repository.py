@@ -2,6 +2,7 @@
 Модуль описывает репозиторий использующий в качестве СУБД SQLite
 """
 import sqlite3 as sql
+import re
 from inspect import get_annotations
 from typing import Any, List
 from abc import ABC
@@ -72,13 +73,12 @@ class SQliteRepository(AbstractRepository[T], QObject):
 
         with sql.connect(self.db_file) as con:
             cur = con.cursor()
-            where_attr = ', '.join('{} = "{}"'.format(key, val) for key, val in where.items())
-            # TODO: подумать как достать строку и избавиться от ""
-            cur.execute(f'SELECT * FROM {self.table_name} WHERE {where_attr}')
+            where_clause = ' AND '.join(f"{key} = ?" for key in where.keys())
+            sql_query = f"SELECT * FROM {self.table_name} WHERE {where_clause}"
+            cur.execute(sql_query, tuple(where.values()))
             res = cur.fetchall()
         con.close()
         return [self.class_name(*obj) for obj in res]
-
     def delete(self, pk: int) -> None:
         with sql.connect(self.db_file) as con:
             cur = con.cursor()

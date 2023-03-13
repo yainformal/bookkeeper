@@ -43,6 +43,7 @@ class BudgetView(QWidget):
 
         self.setLayout(layout)
 
+
     def update_data(self, item):
 
         if item.column() in (1, 2):
