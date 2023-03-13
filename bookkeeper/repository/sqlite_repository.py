@@ -79,6 +79,7 @@ class SQliteRepository(AbstractRepository[T], QObject):
             res = cur.fetchall()
         con.close()
         return [self.class_name(*obj) for obj in res]
+
     def delete(self, pk: int) -> None:
         with sql.connect(self.db_file) as con:
             cur = con.cursor()

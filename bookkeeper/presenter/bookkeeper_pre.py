@@ -35,6 +35,7 @@ class Bookkeeper:
         self.view.edit_button.clicked.connect(
             lambda checked: toggle_window(self.category_edit_view))
 
+
         # подписываемся на изменения в блоке расходы
         self.exp_repo.repo_changed.connect(self.listen_update_exp)
 
@@ -47,6 +48,7 @@ class Bookkeeper:
         self.category_repo.repo_changed.connect(self.listen_update_cat)
         categories = self.category_repo.get_all()
         self.category_edit_view.display_categories(categories, self.category_repo)
+        
 
     # онлайн обновление таблицы с категориями
     def listen_update_cat(self) -> List[Category]:

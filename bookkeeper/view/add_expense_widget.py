@@ -1,13 +1,11 @@
-from PySide6.QtCore import Signal, QDateTime, QDate
-from PySide6.QtGui import QStandardItemModel, QDoubleValidator, QIntValidator
-from PySide6.QtWidgets import QPushButton, QVBoxLayout, QTableWidget, QLineEdit, QLabel, QWidget, QHBoxLayout, \
-    QComboBox, QDateTimeEdit, QDateEdit
+from PySide6.QtCore import Signal, QDate
+from PySide6.QtGui import QIntValidator
+from PySide6.QtWidgets import QPushButton, QVBoxLayout, QLineEdit, QLabel, QWidget, QHBoxLayout, \
+    QComboBox, QDateEdit
 
-from bookkeeper import SQliteRepository
+from bookkeeper.repository.sqlite_repository import SQliteRepository
 from bookkeeper.models.category import Category
-from bookkeeper.models.expense import Expense
-from bookkeeper.view.category_edit_widget import CategoryEditWidget
-from bookkeeper.view.toggle_window import toggle_window
+
 
 path = '/Users/mikhailgubanov/Yandex.Disk.localized/bookkeeper/bookkeeper/data_test.db'
 cat_repo = SQliteRepository[Category](path, Category)
@@ -22,7 +20,7 @@ class AddExpenseWidget(QWidget):
         self.amount_lable = QLabel("Сумма:")
         self.amount_edit = QLineEdit()
 
-        # Создаем валидатор для ввода положительных дробных чисел
+        # Создаем валида тор для ввода положительных дробных чисел
         amount_validator = QIntValidator(0, 100000000)
         self.amount_edit.setValidator(amount_validator)
 

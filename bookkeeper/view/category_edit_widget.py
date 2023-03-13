@@ -58,6 +58,18 @@ class CategoryEditWidget(QWidget):
 
         self.setLayout(layout)
 
+        # Подключение к сигналу
+        self.category_edit_view.cellClicked.connect(self.on_cell_clicked)
+
+    def on_cell_clicked(self, row, column):
+        category_name = self.category_edit_view.item(row, column).text()
+        parent_category_name = ""
+        if self.category_edit_view.item(row, column + 1) is not None:
+            parent_category_name = self.category_edit_view.item(row, column + 1).text()
+        self.cat_edit.setText(category_name)
+        self.sub_cat_edit.setText(parent_category_name)
+        
+
     def display_categories(self, categories: List[Category], category_repo):
         self.category_edit_view.setRowCount(len(categories))
         self.category_edit_view.setColumnCount(2)
@@ -69,7 +81,6 @@ class CategoryEditWidget(QWidget):
             if category.parent is not None:
                 sub_item = QTableWidgetItem("{}".format(category_repo.get(category.parent).name))
                 self.category_edit_view.setItem(i, 1, sub_item)
-
 
             self.category_edit_view.resizeColumnsToContents()
             self.category_edit_view.setSizeAdjustPolicy(QTableWidget.AdjustToContents)
