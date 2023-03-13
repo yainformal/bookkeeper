@@ -1,7 +1,7 @@
-from PySide6.QtCore import Signal, QDateTime
+from PySide6.QtCore import Signal, QDateTime, QDate
 from PySide6.QtGui import QStandardItemModel, QDoubleValidator, QIntValidator
 from PySide6.QtWidgets import QPushButton, QVBoxLayout, QTableWidget, QLineEdit, QLabel, QWidget, QHBoxLayout, \
-    QComboBox, QDateTimeEdit
+    QComboBox, QDateTimeEdit, QDateEdit
 
 from bookkeeper import SQliteRepository
 from bookkeeper.models.category import Category
@@ -37,8 +37,8 @@ class AddExpenseWidget(QWidget):
             self.category_edit.addItem(category.name)
 
         self.datetime_lable = QLabel("Дата:")
-        self.datetime_edit = QDateTimeEdit()
-        self.datetime_edit.setDateTime(QDateTime.currentDateTime())
+        self.datetime_edit = QDateEdit()
+        self.datetime_edit.setDate(QDate.currentDate())
 
         self.comment_lable = QLabel("Комментарий:")
         self.comment_edit = QLineEdit()
